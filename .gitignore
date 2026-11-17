@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.db
+.shieldlog.db
+shieldlog.db
+.env
+.idea/
+.vscode/
+*.log
+.DS_Store

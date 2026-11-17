@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · ShieldLog{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Security findings desk</h1>
+  <p>Track phishing reports, misconfigurations, access alerts, and other defensive findings in one place.</p>
+</section>
+
+<section class="stats" aria-label="Summary">
+  <div class="stat"><span class="stat-value">{{ stats.total }}</span><span class="stat-label">Total</span></div>
+  <div class="stat"><span class="stat-value">{{ stats.open }}</span><span class="stat-label">Open</span></div>
+  <div class="stat"><span class="stat-value">{{ stats.investigating }}</span><span class="stat-label">Investigating</span></div>
+  <div class="stat"><span class="stat-value">{{ stats.resolved }}</span><span class="stat-label">Resolved</span></div>
+  <div class="stat accent"><span class="stat-value">{{ stats.critical_high }}</span><span class="stat-label">High / Critical</span></div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>Recent findings</h2>
+    <a class="btn" href="{{ url_for('main.create_finding') }}">New finding</a>
+  </div>
+
+  {% if findings %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Severity</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in findings %}
+        <tr>
+          <td><a href="{{ url_for('main.view_finding', finding_id=f.id) }}">{{ f.title }}</a></td>
+          <td><span class="chip">{{ f.category }}</span></td>
+          <td><span class="badge severity-{{ f.severity }}">{{ f.severity }}</span></td>
+          <td><span class="badge status-{{ f.status }}">{{ f.status }}</span></td>
+          <td class="actions">
+            <a href="{{ url_for('main.edit_finding', finding_id=f.id) }}">Edit</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">No findings yet. Log your first security finding.</p>
+  {% endif %}
+</section>
+{% endblock %}

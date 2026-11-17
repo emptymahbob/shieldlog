@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == 'edit' %}Edit{% else %}New{% endif %} finding · ShieldLog{% endblock %}
+{% block content %}
+<section class="hero narrow">
+  <h1>{% if mode == 'edit' %}Edit finding{% else %}Log a finding{% endif %}</h1>
+  <p>Record defensive security work: what happened, how severe it is, and where it stands.</p>
+</section>
+
+<form method="post" class="form-panel">
+  <label>
+    Title
+    <input type="text" name="title" required maxlength="200"
+           value="{{ finding.title if finding else '' }}"
+           placeholder="e.g. Phishing email reported by finance" />
+  </label>
+
+  <label>
+    Description
+    <textarea name="description" rows="5"
+              placeholder="What was observed, impact, and next steps">{{ finding.description if finding else '' }}</textarea>
+  </label>
+
+  <div class="form-row">
+    <label>
+      Category
+      <select name="category">
+        {% set cat = finding.category if finding else 'other' %}
+        {% for c in ['phishing','malware','misconfig','access','other'] %}
+        <option value="{{ c }}" {% if cat == c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Severity
+      <select name="severity">
+        {% set sev = finding.severity if finding else 'medium' %}
+        {% for s in ['low','medium','high','critical'] %}
+        <option value="{{ s }}" {% if sev == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Status
+      <select name="status">
+        {% set st = finding.status if finding else 'open' %}
+        {% for s in ['open','investigating','resolved'] %}
+        <option value="{{ s }}" {% if st == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn">{% if mode == 'edit' %}Save changes{% else %}Create finding{% endif %}</button>
+    <a class="link-muted" href="{{ url_for('main.dashboard') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
